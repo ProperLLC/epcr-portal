@@ -13,7 +13,6 @@
     "grunt-contrib-cssmin": "~0.5.0",
     "grunt-contrib-connect": "~0.2.0",
     "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-htmlmin": "~0.1.1",
     "grunt-contrib-imagemin": "~0.1.2",
     "grunt-contrib-livereload": "~0.1.2",
     "grunt-bower-requirejs": "~0.4.1",
@@ -24,7 +23,8 @@
     "grunt-open": "~0.2.0",
     "matchdep": "~0.1.1",
     "grunt-google-cdn": "~0.1.1",
-    "grunt-ngmin": "~0.0.2"
+    "grunt-ngmin": "~0.0.2",
+    "grunt-devtools" : "~0.1.0"
   },
   "engines": {
     "node": ">=0.8.0"

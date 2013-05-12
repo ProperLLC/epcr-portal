@@ -23,10 +23,26 @@ If working on a Mac, Homebrew is recommended (install Node JS)
 Startup (Dev Environment)
 =========================
 
-Once you have the above setup, you can startup the project locally by simply running:
+Once you have the above setup, you will need to pull down all the NPM dependencies.  Do this by running the following from the project root directory:
+
+```
+$ npm install
+```
+
+It will run for a few minutes downloading all sorts of stuff needed - this all goes into the node_modules folder.
+
+When that is complete, you can startup the project locally by simply running the following from the project root directory:
 
 ```
 $ grunt server
 ```
 
 That should launch your default browser with the application landing page.  From there, test away.
+
+Or if you want to use the Chrome devtools plugin:
+
+```
+$ grunt devtools
+```
+
+Then right click, choose 'Inspect Element' and you can launch any Grunt related task from that console.  Click 'server' to start it and then press on the (B) to background the process.
