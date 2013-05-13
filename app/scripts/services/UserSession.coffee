@@ -17,7 +17,7 @@ angular.module('epcrPortalApp')
         session?
 
       login : (credentials) ->
-        deferred = $q.defer
+        deferred = $q.defer()
         $rootScope.error = ""
 
         $http.post("http://localhost:9000/login", credentials)
@@ -42,7 +42,7 @@ angular.module('epcrPortalApp')
             $rootScope.error = "Login Error - cannot connect to host!"
 
       logout : () ->
-        deferred = $q.defer
+        deferred = $q.defer()
         config =
            headers :
               Authorization : " Bearer #{session.auth_token}"
