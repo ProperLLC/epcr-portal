@@ -3,15 +3,11 @@
 angular.module('epcrPortalApp')
   .controller 'IncidentCtrl', ['$scope', '$location', 'UserSession', 'Incidents', ($scope, $location, UserSession, Incidents) ->
     $scope.userSession = UserSession
-    $scope.currentUser = UserSession.getDeferredUser()
-      .then (user) ->
-        Incidents.findForOrganization(user.organizationCode)
+    $scope.currentUser = UserSession.getCurrentUser()
+
+    Incidents.findForOrganization($scope.currentUser.organizationCode)
           .then (incidents) ->
             $scope.incidents = incidents
-        user
-
-
-    $scope.loggedIn = UserSession.isLoggedIn()
 
     $scope.logout = () ->
       results = UserSession.logout()

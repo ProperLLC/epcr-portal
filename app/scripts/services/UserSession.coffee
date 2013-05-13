@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('epcrPortalApp')
-  .factory 'UserSession', ['$rootScope', '$http', '$q', ($rootScope, $http, $q) ->
+  .factory 'UserSession', ['$rootScope', '$http', '$q', '$cookieStore', ($rootScope, $http, $q, $cookieStore) ->
     # Service logic
     # ...
 
@@ -13,25 +13,25 @@ angular.module('epcrPortalApp')
     {
 
       isLoggedIn : () ->
-        session?
+        $cookieStore.get('session')?
 
       getDeferredUser : () ->
         deferredUser
 
       getAuthHeader : () ->
         headers :
-          Authorization : " Bearer #{session?.auth_token}"
+          Authorization : " Bearer #{$cookieStore.get('session')?.auth_token}"
 
       getCurrentUser : () ->
-        console.log "current user ->", currentUser
-        currentUser
+        console.log "current user ->", $cookieStore.get('currentUser')
+        $cookieStore.get('currentUser')
 
       findUser : (username) ->
         deferred = $q.defer()
         $rootScope.error = ""
         config =
           headers :
-            Authorization : " Bearer #{session?.auth_token}"
+            Authorization : " Bearer #{$cookieStore.get('session')?.auth_token}"
 
         query =
           username : "#{username}"
@@ -64,40 +64,46 @@ angular.module('epcrPortalApp')
           .success (data, status, headers, config) ->
             if status == 200
               console.log "Successful login", data
-              session = data
+              $cookieStore.put('session', data)
               deferredUser = getCurrentUser(credentials.username)
               deferredUser.then (user) ->
                 console.log("I think this is the user ->", user)
-                currentUser = user
-              deferred.resolve(currentUser)
-            else if status == 401
-              console.log "Looks like login failed #{status}", data
-              deferred.reject(data)
+                $cookieStore.put('currentUser', user)
+                deferred.resolve(user)
             else
               console.log "Something went wrong... #{status}", data
               deferred.reject(data)
 
           .error (data, status, headers, config) ->
             console.log "Error on login request #{data} : #{status} : #{headers}, #{config}", headers, config
-            $rootScope.error = "Login Error - cannot connect to host!"
+            if status == 401
+              $rootScope.error = "Invalid Credentials."
+            else
+              $rootScope.error = "Login Error - An Error Occurred During Login (#{status})"
 
         deferred.promise
+          .then (user) ->
+            console.log "returning results...", user
+            user
+
 
       logout : () ->
         deferred = $q.defer()
 
         config = headers :
-          Authorization : " Bearer #{session?.auth_token}"
+          Authorization : " Bearer #{$rootScope.session?.auth_token}"
 
         $http.get("http://localhost:9000/logout", config)
           .success (data, status, headers, config) ->
             console.log "Successful logout...clearing session state."
-            session = undefined
-            currentUser = undefined
+            $cookieStore.remove('session')
+            $cookieStore.remove('currentUser')
             deferredUser = undefined
             deferred.resolve(true)
           .error (data, status, headers, config) ->
             console.log "Logout failed: #{status}, #{data}", data
+            $cookieStore.remove('session')
+            $cookieStore.remove('currentUser')
             deferred.resolve(false)
 
         deferred.promise

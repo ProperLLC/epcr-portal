@@ -13,9 +13,14 @@ angular.module('epcrPortalApp')
         query = undefined
         if (orgCode != "PROPERLLC")
           query =
-            departmentCode : orgCode
-            $or :
-              hospitalCode : orgCode
+            $or : [
+              {
+                departmentCode : orgCode
+              },
+              {
+                hospitalCode : orgCode
+              }
+            ]
 
         filter =
           'formData.incidentdate' : 1
@@ -27,7 +32,8 @@ angular.module('epcrPortalApp')
           'formData.protocol' : 1
           'sequenceId' : 1
 
-        url = if (query?) then "http://localhost:9000/data/incidents?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
+        url = if (query?) then "http://localhost:9000/data/incidents?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}&sort=-formData.incidentdate" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
+        console.log "url => #{url}"
 
         $rootScope.error = ""
         $http.get(url, UserSession.getAuthHeader())
