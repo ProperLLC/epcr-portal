@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="alert alert-error fade in" ng-show="error">
+        <button class="close" data-dismiss="alert">x</button>
+        {{error}}
+    </div>
+    <div class="well">
+        <form class="form-horizontal" ng-submit="login()">
+            <div class="control-group">
+                <label class="control-label" for="username">Username</label>
+                <div class="controls">
+                    <input type="text" id="username" ng-required="true" ng-model="credentials.username" placeholder="Your Username"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">Password</label>
+                <div class="controls">
+                    <input type="password" id="password" ng-required="true" ng-model="credentials.password" placeholder="password"/>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" ng-disabled="form.$invalid">Sign In</button>
+            </div>
+        </form>
+    </div>
+</div>
