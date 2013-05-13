@@ -18,6 +18,10 @@ angular.module('epcrPortalApp')
       getDeferredUser : () ->
         deferredUser
 
+      getAuthHeader : () ->
+        headers :
+          Authorization : " Bearer #{session?.auth_token}"
+
       getCurrentUser : () ->
         console.log "current user ->", currentUser
         currentUser

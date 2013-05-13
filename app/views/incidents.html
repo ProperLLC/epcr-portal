@@ -1,7 +1,31 @@
 <div class="container">
-    <p>Logged in as {{currentUser.username}} / {{currentUser.organizationCode}}</p>
-    <button class="btn btn-primary" ng-click="logout()">Sign Me Out!</button>
-    <div class="hero-unit">
-        Incidents here!   (eventually)
+    <div class="well">
+        <p>Logged in as {{currentUser.username}} / {{currentUser.organizationCode}} <a href="" ng-click="logout()">Sign Me Out!</a></p>
+    </div>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Incident Date/Time</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <th>Chief Complaint</th>
+                    <th>MOI</th>
+                    <th>SFTP</th>
+                    <th>PCR Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="incident in incidents">
+                    <td>{{incident.formData.incidentdate | formatDate | date:'MM/dd/yyyy'}}</td>
+                    <td>{{incident.formData.patientage}}</td>
+                    <td>{{incident.formData.patientgender_m}}{{incident.formData.patientgender_f}}</td>
+                    <td>{{incident.formData.complaint.chief1}}</td>
+                    <td>{{incident.formData.moi.chief1}}</td>
+                    <td>{{incident.formData.protocol}}</td>
+                    <td>{{incident.sequenceId}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

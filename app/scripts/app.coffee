@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('epcrPortalApp', [])
+angular.module('epcrPortalApp', ['epcrPortalApp.filters'])
   .config(['$routeProvider', ($routeProvider) ->
     $routeProvider
       .when '/',
@@ -16,11 +16,11 @@ angular.module('epcrPortalApp', [])
         redirectTo: '/'
   ])
 
-  .run [ '$rootScope', '$location', 'UserSession', ($rootScope, $location, UserSession) ->
+  .run ([ '$rootScope', '$location', 'UserSession', ($rootScope, $location, UserSession) ->
       $rootScope.$on "$routeChangeStart", (event, next, current) ->
         console.log "changing route from: #{current?.$$route?.templateUrl} to #{next?.$$route?.templateUrl}"
         # look for logged in user...
         if not UserSession.isLoggedIn()
           $location.path "/login" unless next.$$route?.templateUrl.indexOf("views/public") == 0
 
-]
+  ])

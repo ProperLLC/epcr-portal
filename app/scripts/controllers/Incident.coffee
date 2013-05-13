@@ -1,11 +1,15 @@
 'use strict'
 
 angular.module('epcrPortalApp')
-  .controller 'IncidentCtrl', ['$scope', '$location', 'UserSession', ($scope, $location, UserSession) ->
+  .controller 'IncidentCtrl', ['$scope', '$location', 'UserSession', 'Incidents', ($scope, $location, UserSession, Incidents) ->
     $scope.userSession = UserSession
     $scope.currentUser = UserSession.getDeferredUser()
       .then (user) ->
+        Incidents.findForOrganization(user.organizationCode)
+          .then (incidents) ->
+            $scope.incidents = incidents
         user
+
 
     $scope.loggedIn = UserSession.isLoggedIn()
 
