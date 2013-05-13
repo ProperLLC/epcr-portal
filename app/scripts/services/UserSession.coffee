@@ -17,7 +17,7 @@ angular.module('epcrPortalApp')
         session?
 
       login : (credentials) ->
-        deferred = $q.defer
+        deferred = $q.defer()
         $rootScope.error = ""
 
         $http.post("http://localhost:9000/login", credentials)
@@ -27,22 +27,21 @@ angular.module('epcrPortalApp')
               session = data
               username = credentials.username
               deferred.resolve(data)
-              deferred.promise
             else if status == 401
               console.log "Looks like login failed #{status}", data
               deferred.reject(data)
-              deferred.promise
             else
               console.log "Something went wrong... #{status}", data
               deferred.reject(data)
-              deferred.promise
 
           .error (data, status, headers, config) ->
             console.log "Error on login request #{data} : #{status} : #{headers}, #{config}", headers, config
             $rootScope.error = "Login Error - cannot connect to host!"
 
+        deferred.promise
+
       logout : () ->
-        deferred = $q.defer
+        deferred = $q.defer()
         config =
            headers :
               Authorization : " Bearer #{session.auth_token}"
@@ -53,11 +52,11 @@ angular.module('epcrPortalApp')
             session = undefined
             username = undefined
             deferred.resolve(true)
-            deferred.promise
           .error (data, status, headers, config) ->
             console.log "Logout failed: #{status}, #{data}", data
             deferred.resolve(false)
-            deferred.promise
+
+        deferred.promise
 
     }
   ]
