@@ -30,7 +30,9 @@ angular.module('epcrPortalApp')
           'formData.complaint.chief1' : 1
           'formData.moi.chief1' : 1
           'formData.protocol' : 1
-          'sequenceId' : 1
+          'sequenceId' : 1,
+          'departmentCode' : 1,
+          'hospitalCode' : 1
 
         url = if (query?) then "http://localhost:9000/data/incidents?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}&sort=-formData.incidentdate" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
         console.log "url => #{url}"

@@ -91,7 +91,7 @@ angular.module('epcrPortalApp')
         deferred = $q.defer()
 
         config = headers :
-          Authorization : " Bearer #{$rootScope.session?.auth_token}"
+          Authorization : " Bearer #{$cookieStore.get('session')?.auth_token}"
 
         $http.get("http://localhost:9000/logout", config)
           .success (data, status, headers, config) ->
