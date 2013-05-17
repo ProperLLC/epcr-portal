@@ -8,10 +8,11 @@ angular.module('epcrPortalApp')
       $location.path '/'
 
     $scope.login = () ->
-      results = UserSession.login($scope.credentials)
+      UserSession.login($scope.credentials)
         .then (results) ->
           console.log "Logged In =>", results
           $location.path '/incidents'
-      #  console.log "ugh - failed! #{error}"
-      #  $scope.message = "Sorry, try again!"
+        , (error) ->
+            console.log "ugh - failed! #{error}"
+            $scope.message = "Sorry, try again!"
   ]

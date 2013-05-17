@@ -5,10 +5,6 @@ angular.module('epcrPortalApp')
     # Service logic
     # ...
 
-    session = undefined
-    deferredUser = undefined
-    currentUser = undefined
-
     # Public API here
     {
 
