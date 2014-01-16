@@ -15,6 +15,13 @@ angular.module('epcrPortalApp', ['ngRoute', 'ngResource', 'LocalStorageModule', 
       .when '/incidents',
         templateUrl: 'views/incidents.html'
         controller: 'IncidentCtrl'
+        resolve :
+          incidents : ($rootScope, Incidents) ->
+            if ($rootScope.auth.isLoggedIn())
+              Incidents.findForOrganization($rootScope.auth.getCurrentUser().organizationCode)
+            else
+              []
+
       .otherwise
         redirectTo: '/'
   ])

@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('epcrPortalApp')
-  .factory 'Incidents', ['$http', '$q', '$rootScope', 'UserSession', ($http, $q, $rootScope, UserSession) ->
+  .factory 'Incidents', ['$http', '$q', '$rootScope', 'configuration', ($http, $q, $rootScope, configuration) ->
     # Service logic
     # ...
+    apiHost = "#{configuration.api.protocol}://#{configuration.api.host}:#{configuration.api.port}"
 
     # Public API here
     {
@@ -34,22 +35,23 @@ angular.module('epcrPortalApp')
           'departmentCode' : 1,
           'hospitalCode' : 1
 
-        url = if (query?) then "http://localhost:9000/data/incidents?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}&sort=-formData.incidentdate" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
+        url = if (query?) then "#{apiHost}/data/incidents?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}&sort=-formData.incidentdate" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
         console.log "url => #{url}"
 
         $rootScope.error = ""
-        $http.get(url, UserSession.getAuthHeader())
+        $http.get(url)
           .success (data, status, headers, config) ->
             if status == 200
               console.log "Found -> ", data
               deferred.resolve(data)
             else
               console.log "Didn't find any incidents for #{orgCode}, Status: #{status}, Message: #{data.error}"
-              deferred.resolve(data)
+              deferred.reject(data)
 
           .error (data, status, headers, config) ->
             console.log "Error on Incidents.findForOrganization request #{data} : #{status} : #{headers}, #{config}", headers, config
             $rootScope.error = "No Incidents on record for your organization."
+            deferred.reject(data)
 
         deferred.promise
 

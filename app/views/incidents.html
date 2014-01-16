@@ -1,8 +1,9 @@
 <div class="container">
-    <div class="well">
-        <p>Logged in as {{currentUser.username}} / {{currentUser.organizationCode}} <a href="" ng-click="logout()">Sign Me Out!</a></p>
+    <div class="container" ng-hide="auth.isLoggedIn()">
+        <h3>Forbidden</h3>
+        <p>You must sign in before you can use this application and view any data.  Please click the 'Sign In' link in the upper right.  Thanks.</p>
     </div>
-    <div class="container">
+    <div class="container" ng-show="auth.isLoggedIn()">
         <table class="table">
             <thead>
                 <tr>

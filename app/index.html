@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="epcrPortalApp" ng-cloak>
+  <body ng-app="epcrPortalApp" ng-cloak ng-controller="AuthCtrl">
       <nav class="navbar navbar-default" role="navigation">
           <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ui-collapse">
@@ -40,7 +40,7 @@
               </ul>
               <ul class="nav navbar-nav navbar-right" ng-hide="auth.isLoggedIn()">
                   <li>
-                      <a ng-click="showSignIn()"><span class="glyphicon glyphicon-log-in"></span> Sign In</a>
+                      <a href="" ng-click="showSignIn()"><span class="glyphicon glyphicon-log-in"></span> Sign In</a>
                   </li>
               </ul>
           </div>
@@ -68,7 +68,43 @@
     <!--</div>-->
     <div class="container" ng-view></div>
 
-    <script src="bower_components/jquery/jquery.js"></script>
+      <!-- sign in modal -->
+      <div id="signInModal" class="modal fade" role="modal">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h3><span class="glyphicon glyphicon-log-in"></span> Sign In</h3>
+                  </div>
+                  <div class="modal-body">
+                      <form name="loginForm" class="form">
+                          <div class="form-group" ng-class="{'has-error': loginForm.username.$error.email, 'has-success': loginForm.username.$valid }">
+                              <label class="sr-only" for="username">Email</label>
+                              <div class="alert alert-danger" ng-show="loginForm.username.$error.email">
+                                  <p><span class="glyphicon glyphicon-exclamation-sign"></span> You must enter a valid email address!</p>
+                              </div>
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                                  <input type="email" class="form-control" id="username" name="username" ng-required="true" ng-model="user.email" placeholder="Email" autofocus="autofocus"/>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                              <label class="sr-only" for="password">Password</label>
+                              <div class="input-group">
+                                  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                  <input type="password" class="form-control" id="password" ng-required="true" ng-model="user.password" placeholder="Password"/>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn btn-primary btn-block" ng-disabled="loginForm.$invalid" ng-click="auth.login(user)">Sign In</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -91,9 +127,10 @@
     <script src="scripts/filters.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/login.js"></script>
-    <script src="scripts/controllers/Incident.js"></script>
+    <script src="scripts/controllers/IncidentController.js"></script>
     <script src="scripts/services/Incidents.js"></script>
     <script src="scripts/services/Users.js"></script>
+    <script src="scripts/controllers/AuthController.js"></script>
     <!-- endbuild -->
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
