@@ -1,7 +1,10 @@
 'use strict'
 
-angular.module('epcrPortalApp', ['ngCookies','epcrPortalApp.filters'])
-  .config(['$routeProvider', ($routeProvider) ->
+angular.module('epcrPortalApp', ['ngRoute', 'ngResource', 'LocalStorageModule', 'hawk.auth', 'epcr.auth','epcrPortalApp.filters', 'services.envConfig'])
+  .config(['$routeProvider', 'hawkServiceProvider', ($routeProvider, hawkServiceProvider) ->
+    # setup urls we don't need hawk auth for
+    hawkServiceProvider.setWhiteList(['/ping', '/login'])
+
     $routeProvider
       .when '/',
         templateUrl: 'views/public/main.html'
@@ -16,12 +19,6 @@ angular.module('epcrPortalApp', ['ngCookies','epcrPortalApp.filters'])
         redirectTo: '/'
   ])
 
-  .run ([ '$rootScope', '$location', 'UserSession', ($rootScope, $location, UserSession) ->
-      $rootScope.$on "$routeChangeStart", (event, next, current) ->
-        console.log "changing route from: #{current?.$$route?.templateUrl} to #{next?.$$route?.templateUrl}"
-        # look for logged in user...
-        if not UserSession.isLoggedIn()
-          console.log "Not logged in...let's see where they go..."
-          $location.path "/login" unless next.$$route?.templateUrl.indexOf("views/public") == 0
-
+  .run ([ '$rootScope', 'authService', ($rootScope, authService) ->
+    $rootScope.auth = authService
   ])

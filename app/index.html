@@ -10,13 +10,43 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
   <body ng-app="epcrPortalApp" ng-cloak>
-    <!--[if lt IE 7]>
+      <nav class="navbar navbar-default" role="navigation">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ui-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">FireMedPro</a>
+          </div>
+          <div class="collapse navbar-collapse navbar-ui-collapse">
+              <ul class="nav navbar-nav navbar-right" ng-show="auth.isLoggedIn()">
+                  <li class="dropdown">
+                      <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                          <span class="glyphicon glyphicon-user"> {{ currentUser.email }}</span>
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li><a tabindex="-1" href="#" ng-click="auth.logout()"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+                      </ul>
+                  </li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right" ng-hide="auth.isLoggedIn()">
+                  <li>
+                      <a ng-click="showSignIn()"><span class="glyphicon glyphicon-log-in"></span> Sign In</a>
+                  </li>
+              </ul>
+          </div>
+      </nav>
+
+  <!--[if lt IE 7]>
       <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
     <![endif]-->
 
@@ -26,32 +56,41 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="navbar navbar-top">
-        <div class="navbar-inner">
-            <div class="container">
-                <a class="brand" href="/">FireMed Pro</a>
-            </div>
-            <div class="container" ng-show="currentUser">
-                <p>Logged in as {{currentUser.username}} / {{currentUser.organizationCode}} <a href="" ng-click="logout()">Sign Me Out!</a></p>
-            </div>
-        </div>
-    </div>
+    <!--<div class="navbar navbar-top">-->
+        <!--<div class="navbar-inner">-->
+            <!--<div class="container">-->
+                <!--<a class="brand" href="/">FireMed Pro</a>-->
+            <!--</div>-->
+            <!--<div class="container" ng-show="currentUser">-->
+                <!--<p>Logged in as {{currentUser.username}} / {{currentUser.organizationCode}} <a href="" ng-click="logout()">Sign Me Out!</a></p>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="container" ng-view></div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-cookies.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-resource.min.js"></script>
-    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
+    <script src="bower_components/angular-hawk/index.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/crypto-js/rollups/hmac-sha256.js"></script>
+    <script src="bower_components/crypto-js/components/enc-base64-min.js"></script>
+    <script src="bower_components/momentjs/moment.js"></script>
+    <script src="bower_components/uri.js/src/URI.js"></script>
     <!--<script src="components/angular-resource/angular-resource.js"></script>-->
 
+    <!-- build:js(app) scripts/envConfig.js -->
+    <script src="scripts/services/config.js"></script>
+    <!-- endbuild -->
+
     <!-- build:js(.tmp) scripts/scripts.js -->
+    <script src="scripts/services/AuthModule.js"></script>
     <script src="scripts/app.js"></script>
     <script src="scripts/filters.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/login.js"></script>
-    <script src="scripts/services/UserSession.js"></script>
     <script src="scripts/controllers/Incident.js"></script>
     <script src="scripts/services/Incidents.js"></script>
     <script src="scripts/services/Users.js"></script>

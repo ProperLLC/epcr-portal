@@ -1,7 +1,9 @@
 .idea/*
 *.iml
+*.old
 node_modules
 dist
 .tmp
 .sass-cache
-app/components
+app/bower_components
+app/scripts/services/config.js
