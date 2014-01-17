@@ -35,11 +35,18 @@ angular.module('epcrPortalApp')
           'departmentCode' : 1,
           'hospitalCode' : 1
 
-        url = if (query?) then "#{apiHost}/data/incidents?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}&sort=-formData.incidentdate" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
-        console.log "url => #{url}"
+        httpConfig =
+          params:
+            filter : encodeURIComponent(JSON.stringify(filter))
+            query : encodeURIComponent(JSON.stringify(query))
+            sort : "-formData.incidentdate"
+
+        if (not query?)
+          delete httpConfig.params.query
+        #url = if (query?) then "#{apiHost}/data/incidents" else "http://localhost:9000/data/incidents?filter=#{JSON.stringify(filter)}&sort=-formData.incidentDate"
 
         $rootScope.error = ""
-        $http.get(url)
+        $http.get("#{apiHost}/data/incidents", httpConfig)
           .success (data, status, headers, config) ->
             if status == 200
               console.log "Found -> ", data
