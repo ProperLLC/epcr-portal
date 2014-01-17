@@ -20,6 +20,10 @@ class AuthService
     .success (data, status, headers, config) =>
         @localStorageService.add('credentials', data)
         @$rootScope.$broadcast 'auth:login:success'
+        @Users.get(data.email)
+          .then (user) =>
+            console.log "current user -> ", user
+            @localStorageService.add('userContext', user)
 
     .error (data, status, headers, config) =>
         console.log "Error attempting to auth #{status}", data
@@ -31,11 +35,7 @@ class AuthService
     @$rootScope.$broadcast 'auth:logout:success'
 
   getCurrentUser : ->
-    user = null
-    if (@isLoggedIn())
-      creds = @localStorageService.get('credentials')
-      user = @Users.get(creds.email)
-    user
+    @localStorageService.get('userContext')
 
   isLoggedIn : ->
     @localStorageService.get('credentials')?
