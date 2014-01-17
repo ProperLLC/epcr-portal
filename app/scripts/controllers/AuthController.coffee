@@ -46,6 +46,7 @@ class AuthController
 
     # expose showSignIn to UI
     $scope.showSignIn = showSignIn
+    $scope.dismissSignIn = dismissSignIn
     $scope.currentUser = $scope.auth.getCurrentUser()
 
 angular.module('epcrPortalApp').controller 'AuthCtrl', ['$scope', 'httpBuffer', AuthController]
