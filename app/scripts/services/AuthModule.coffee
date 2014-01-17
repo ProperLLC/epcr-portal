@@ -1,5 +1,5 @@
 class AuthService
-  constructor: (@$q, @$rootScope, @$http, @configuration, @localStorageService, @Users) ->
+  constructor: (@$q, @$rootScope, @$http, @config, @localStorageService, @Users) ->
 
   login : (user) ->
     console.log "Attempting auth for #{user.email}"
@@ -12,7 +12,7 @@ class AuthService
       headers :
         Authorization : " Basic #{encodedCredentials}"
 
-    apiHost = "#{@configuration.api.protocol}//#{configuration.api.host}:#{configuration.api.port}"
+    apiHost = "#{@config.api.protocol}://#{@config.api.host}:#{@config.api.port}"
 
     url = "#{apiHost}/login"
 
@@ -34,7 +34,7 @@ class AuthService
     user = null
     if (@isLoggedIn())
       creds = @localStorageService.get('credentials')
-      user = @Users.get(email : creds.email)
+      user = @Users.get(creds.email)
     user
 
   isLoggedIn : ->
@@ -70,6 +70,6 @@ class HttpBuffer
     retryHttpRequest(request) for request in @buffer
     @buffer = []
 
-angular.module('epcr.auth', ['LocalStorageModule'])
-.service('authService', ['$q', '$rootScope','$http', 'configuration', 'localStorageService', 'Users', AuthService])
+angular.module('epcr.auth', ['LocalStorageModule', 'services.envConfig'])
+.service('authService', ['$q', '$rootScope','$http', 'config', 'localStorageService', 'Users', AuthService])
 .service('httpBuffer', ['$http', HttpBuffer])

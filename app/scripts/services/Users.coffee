@@ -1,25 +1,32 @@
 'use strict';
 
 angular.module('epcrPortalApp')
-  .factory 'Users', ['$http', '$q', 'configuration', ($http, $q, configuration) ->
+  .factory 'Users', ['$http', '$q', 'config', '$rootScope', ($http, $q, config, $rootScope) ->
     # Service logic
     # ...
-    apiHost = "#{configuration.api.protocol}://#{configuration.api.host}:#{configuration.api.port}"
+    apiHost = "#{config.api.protocol}://#{config.api.host}:#{config.api.port}"
 
     # Public API here
     {
       get : (email) ->
+        console.log "looking up record for #{email}", email
         deferred = $q.defer()
         $rootScope.error = ""
 
         query =
-          username : "#{email}"
+          email : "#{email}"
 
         filter =
           _id : 0
           password : 0
 
-        $http.get("#{apiHost}/data/users?query=#{JSON.stringify(query)}&filter=#{JSON.stringify(filter)}")
+        # NOTE - put these in alpha order so the Hawk message is generated properly on both sides
+        httpConfig =
+          params :
+            filter: encodeURIComponent(JSON.stringify(filter))
+            query: encodeURIComponent(JSON.stringify(query))
+
+        $http.get("#{apiHost}/data/users", httpConfig)
           .success (data, status, headers, config) ->
             if status == 200
               console.log "Found User -> ", data[0]
@@ -29,7 +36,7 @@ angular.module('epcrPortalApp')
               deferred.reject(data)
 
           .error (data, status, headers, config) ->
-            console.log "Error on Users.findByUsername request #{data} : #{status} : #{headers}, #{config}", headers, config
+            console.log "Error on Users.findByUsername request : #{status}", data, headers(), config
             $rootScope.error = "Could not find user in database - are you for real?"
             deferred.reject(data)
 

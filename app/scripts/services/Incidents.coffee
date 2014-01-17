@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('epcrPortalApp')
-  .factory 'Incidents', ['$http', '$q', '$rootScope', 'configuration', ($http, $q, $rootScope, configuration) ->
+  .factory 'Incidents', ['$http', '$q', '$rootScope', 'config', ($http, $q, $rootScope, config) ->
     # Service logic
     # ...
-    apiHost = "#{configuration.api.protocol}://#{configuration.api.host}:#{configuration.api.port}"
+    apiHost = "#{config.api.protocol}://#{config.api.host}:#{config.api.port}"
 
     # Public API here
     {
