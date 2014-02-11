@@ -1,9 +1,13 @@
 'use strict'
 
 angular.module('epcrPortalApp', ['ngRoute', 'ngResource', 'LocalStorageModule', 'hawk.auth', 'epcr.auth','epcrPortalApp.filters', 'services.envConfig'])
-  .config(['$routeProvider', 'hawkServiceProvider', ($routeProvider, hawkServiceProvider) ->
+  .config(['$routeProvider', '$locationProvider', 'hawkServiceProvider', ($routeProvider, $locationProvider, hawkServiceProvider) ->
     # setup urls we don't need hawk auth for
     hawkServiceProvider.setWhiteList(['/ping', '/login'])
+
+    # enable html5 navigation mode
+    $locationProvider.html5Mode true
+    $locationProvider.hashPrefix = '!'
 
     $routeProvider
       .when '/',

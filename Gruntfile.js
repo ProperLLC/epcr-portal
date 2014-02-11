@@ -22,7 +22,11 @@ module.exports = function (grunt) {
     yeoman: {
       // configurable paths
       app: require('./bower.json').appPath || 'app',
-      dist: 'dist'
+      dist: 'dist',
+      openshift: {
+          stage : '/Users/terry/projects/openshift/staging/epcr/app',
+          prod : '/Users/terry/projects/openshift/prod/epcr/app/'
+      }
     },
 
     // Watches files for changes and runs tasks based on the changed files
@@ -69,7 +73,12 @@ module.exports = function (grunt) {
           base: [
             '.tmp',
             '<%= yeoman.app %>'
-          ]
+          ],
+          middleware: function (connect, options) {
+            var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+            return [require('connect-modrewrite')(['!(\\..+)$ / [L]'])].concat(
+              optBase.map(function(path){ return connect.static(path); }));
+          }
         }
       },
       test: {
@@ -102,6 +111,9 @@ module.exports = function (grunt) {
 
     // Empties folders to start fresh
     clean: {
+      options : {
+        force : true
+      },
       dist: {
         files: [{
           dot: true,
@@ -112,7 +124,9 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      staging : '<%= yeoman.openshift.stage %>',
+      production : '<%= yeoman.openshift.prod %>'
     },
 
     // Add vendor prefixed styles
@@ -341,26 +355,80 @@ module.exports = function (grunt) {
         singleRun: true
       }
     },
-    replace : {
-        development : {
-            options : {
-                patterns : [
-                    {
-                        json: grunt.file.readJSON('./config/environments/development.json')
-                    }
-                ]
-            },
-            files : [{
-                expand : true,
-                flatten : true,
-                src : ['./config/config.js'],
-                dest : '<%= yeoman.app %>/scripts/services'
-            }]
+
+    // for deployment to openshift
+    shell: {
+      stage: {
+        command : [
+          'cd <%= yeoman.openshift.stage %>',
+          'git add .',
+          'git commit -m "latest code - grunt build" ',
+          'git push'
+        ].join('&&'),
+        options: {
+          stdout: true
         }
+
+      },
+      prod: {
+        command : [
+          'cd <%= yeoman.openshift.prod %>',
+          'git add .',
+          'git commit -m "latest code - grunt build" ',
+          'git push'
+        ].join('&&'),
+        options: {
+          stdout: true
+        }
+
+      }
+    },
+
+    replace : {
+      development : {
+          options : {
+              patterns : [
+                  {
+                      json: grunt.file.readJSON('./config/environments/development.json')
+                  }
+              ]
+          },
+          files : [{
+              expand : true,
+              flatten : true,
+              src : ['./config/config.js'],
+              dest : '<%= yeoman.app %>/scripts/services'
+          }]
+      },
+      staging: {
+        options: {
+          patterns: [{
+            json: grunt.file.readJSON('./config/environments/staging.json')
+          }]
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['./config/config-env.js'],
+          dest: '<%= yeoman.app %>/scripts/services/'
+        }]
+      },
+      production: {
+        options: {
+          patterns: [{
+            json: grunt.file.readJSON('./config/environments/production.json')
+          }]
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['./config/config-env.js'],
+          dest: '<%= yeoman.app %>/scripts/services/'
+        }]
+      }
     }
   });
 
-  grunt.loadNpmTasks('grunt-replace');
 
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
@@ -412,4 +480,26 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
+
+  grunt.registerTask('production', [
+    'clean:dist',
+    'clean:production',
+    'replace:production',
+    'build',
+    'copy:prod',
+    'shell:prod'
+  ]);
+
+  grunt.registerTask('staging', [
+    'clean:dist',
+    'clean:staging',
+    'replace:staging',
+    'build',
+    'copy:stage',
+    'shell:stage'
+  ]);
+
+  grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-replace');
+
 };

@@ -1,0 +1,7 @@
+{
+    "api" : {
+        "host" : "api-properllc.rhcloud.com",
+        "protocol" : "https",
+        "port" : 443
+    }
+}
