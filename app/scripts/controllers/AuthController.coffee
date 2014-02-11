@@ -1,5 +1,5 @@
 class AuthController
-  constructor : (@$scope, @httpBuffer) ->
+  constructor : (@$scope, @httpBuffer, @$location) ->
     signInShown = false
 
     $scope.$on('auth:required',
@@ -32,6 +32,11 @@ class AuthController
     )
 
     # do we also want to handle 'auth:logout:success' ??
+    $scope.$on('auth:logout:success',
+      (event) ->
+        console.log "Logout successful!"
+        $location.path "/main"
+    )
 
     # helper methods
     showSignIn = () ->
@@ -49,4 +54,4 @@ class AuthController
     $scope.dismissSignIn = dismissSignIn
     $scope.currentUser = $scope.auth.getCurrentUser()
 
-angular.module('epcrPortalApp').controller 'AuthCtrl', ['$scope', 'httpBuffer', AuthController]
+angular.module('epcrPortalApp').controller 'AuthCtrl', ['$scope', 'httpBuffer', '$location', AuthController]

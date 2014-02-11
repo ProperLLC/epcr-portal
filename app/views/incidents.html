@@ -1,13 +1,22 @@
 <div class="container">
-    <div class="container" ng-hide="auth.isLoggedIn()">
-        <h3>Forbidden</h3>
+    <div class="alert alert-error" ng-hide="auth.isLoggedIn()">
         <p>You must sign in before you can use this application and view any data.  Please click the 'Sign In' link in the upper right.  Thanks.</p>
     </div>
     <div class="container" ng-show="auth.isLoggedIn()">
+        <h3>Current Incidents</h3>
+        <p class="lead">The following is a list of current incidents in the system.  By default they are sorted by date/time descending.  You can search all available incidents by typing in your search term into the search box to the right.  This will search across all columns to find a match.</p>
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Incident Date/Time</th>
+                    <th colspan="9">
+                        <div class="col-md-4 input-group pull-right">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+                            <input type="search" class="form-control" ng-model="search"/>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th><span class="fa fa-calendar"></span> Incident Date/Time</th>
                     <th>Age</th>
                     <th>Sex</th>
                     <th>Chief Complaint</th>
@@ -15,11 +24,11 @@
                     <th>SFTP</th>
                     <th>PCR Number</th>
                     <th>Department Code</th>
-                    <th>Hospital Code</th>
+                    <th><span class="fa fa-hospital-o"></span> Hospital Code</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="incident in incidents">
+                <tr ng-repeat="incident in incidents | filter:search">
                     <td>{{incident.formData.incidentdate | formatDate | date:'MM/dd/yyyy'}}</td>
                     <td>{{incident.formData.patientage}}</td>
                     <td>{{incident.formData.patientgender_m}}{{incident.formData.patientgender_f}}</td>

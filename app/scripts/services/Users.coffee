@@ -1,6 +1,7 @@
 'use strict';
+angular.module('epcr.services', [])
 
-angular.module('epcrPortalApp')
+angular.module('epcr.services')
   .factory 'Users', ['$http', '$q', 'config', '$rootScope', ($http, $q, config, $rootScope) ->
     # Service logic
     # ...

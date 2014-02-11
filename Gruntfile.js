@@ -125,8 +125,8 @@ module.exports = function (grunt) {
         }]
       },
       server: '.tmp',
-      staging : '<%= yeoman.openshift.stage %>',
-      production : '<%= yeoman.openshift.prod %>'
+      stage : '<%= yeoman.openshift.stage %>',
+      prod : '<%= yeoman.openshift.prod %>'
     },
 
     // Add vendor prefixed styles
@@ -301,6 +301,20 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      stage: {
+        expand: true,
+        dot: true,
+        cwd: '<%= yeoman.dist %>',
+        src: ['**'],
+        dest: '<%= yeoman.openshift.stage %>'
+      },
+      prod: {
+        expand: true,
+        dot: true,
+        cwd: '<%= yeoman.dist %>',
+        src: ['**'],
+        dest: '<%= yeoman.openshift.prod %>'
       }
     },
 
@@ -400,7 +414,7 @@ module.exports = function (grunt) {
               dest : '<%= yeoman.app %>/scripts/services'
           }]
       },
-      staging: {
+      stage: {
         options: {
           patterns: [{
             json: grunt.file.readJSON('./config/environments/staging.json')
@@ -409,11 +423,11 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           flatten: true,
-          src: ['./config/config-env.js'],
+          src: ['./config/config.js'],
           dest: '<%= yeoman.app %>/scripts/services/'
         }]
       },
-      production: {
+      prod: {
         options: {
           patterns: [{
             json: grunt.file.readJSON('./config/environments/production.json')
@@ -422,7 +436,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           flatten: true,
-          src: ['./config/config-env.js'],
+          src: ['./config/config.js'],
           dest: '<%= yeoman.app %>/scripts/services/'
         }]
       }
@@ -481,19 +495,19 @@ module.exports = function (grunt) {
     'build'
   ]);
 
-  grunt.registerTask('production', [
+  grunt.registerTask('prod', [
     'clean:dist',
-    'clean:production',
-    'replace:production',
+    'clean:prod',
+    'replace:prod',
     'build',
     'copy:prod',
     'shell:prod'
   ]);
 
-  grunt.registerTask('staging', [
+  grunt.registerTask('stage', [
     'clean:dist',
-    'clean:staging',
-    'replace:staging',
+    'clean:stage',
+    'replace:stage',
     'build',
     'copy:stage',
     'shell:stage'

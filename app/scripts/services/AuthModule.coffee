@@ -70,6 +70,6 @@ class HttpBuffer
     retryHttpRequest(request) for request in @buffer
     @buffer = []
 
-angular.module('epcr.auth', ['LocalStorageModule', 'services.envConfig'])
+angular.module('epcr.auth', ['LocalStorageModule', 'services.envConfig', 'epcr.services'])
 .service('authService', ['$q', '$rootScope','$http', 'config', 'localStorageService', 'Users', AuthService])
 .service('httpBuffer', ['$http', HttpBuffer])

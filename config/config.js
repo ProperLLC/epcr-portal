@@ -2,7 +2,7 @@
  * Created by terry on 1/15/14.
  */
 angular.module("services.envConfig", [])
-    .constant("configuration",
+    .constant("config",
         {
             api :
                 {
