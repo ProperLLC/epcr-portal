@@ -1,0 +1,247 @@
+FORMAT: 1A
+HOST: http://api.exceda.com
+
+# Exceda Cache PreWarm API
+Exceda Cache PreWarm API enables customers to manage *pre-warm requests* for content in the Exceda CDN cache.
+
+## Authentication
+This API requires a two step authentication/authorization.  First, HTTP Basic-Auth is used over SSL to retrieve a set of credentials that are valid for 2 weeks.  These credentials include a cryptographic key and other information necessary to sign each request. Each request must provide an Authorization header to be filled out following the [Hawk](https://github.com/hueniverse/hawk) protocol, using the keys provided by the credentials.  Hawk is a security protocol that is an alternative to the OAuth MAC Token specification.  Implementations are available in various languages.
+
+## Media Types
+This API uses plain JSON to transmit the data structures back and forth between client and server.
+
+Requests with a message-body are using plain JSON to set or update resource states.
+
+## Error States
+The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
+
+# Group Authentication
+
+##Credentials [/credentials]
+Simply perform a Basic-Auth request to this endpoint with your username/password and receive the credentials necessary to sign your requests.
+
+### Request Credentials [GET]
+
++ Request
+
+    + Headers
+            
+            Authorization: "Basic dGVycSSkljsdifoLKJwesdNvbTpmb29iYXIx"
+
++ Response 200
+    
+        {
+          identifier: "SZWOcV1Zou0PU0PQZ",
+                 key: "ESO3qvkWvNcthooPasdfjKLFJASEASdfja0123fP4MGGs7BUaBNAAvgJbtSaoxoX",
+           algorithm: "sha256",
+          remoteAddr: "0.0.0.0",
+                user: "user@company.com",
+             created: 1409078003348
+        }
+
+##Published Host Registration Collection [/pubHostRegistrations]
+In order to use the system one or more valid published host (pubHost) registrations are required.  This section describes how to work with them.
+
+### List All Published Hosts [GET]
+Invoke this method in order to see what publish hosts are registered for your organization.
+
++ Request (application/json)
+
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
++ Response 200 (application/json)
+                
+                [
+                    { "id" : "53fbcd894a000044640304b0", "pubHost" : "www.company.com", "status" : "REGISTERED" }, 
+                    { "id" : "53fbcd894a000044640a5ac0", "pubHost" : "m.company.com", "status" : "REGISTERED" }
+                ]
+
+### Register Published Host [POST]
+This must be invoked for each published host that you wish to use with this service.  By default, no published hosts are registered and any calls to create new 
+pre-warm requests will be denied.  You may only create a pre-warm request for a published host that you have registered - if another organization has registered
+a published host that you are trying to, you will also be denied.  (in that case, contact Exceda support immediately)
+
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
+    + Body
+    
+            { "pubHost" : "www.company.com" }
+
++ Response 201 (application/json)
+
+        { "id" : "53fbcd894a000044640304b0", "pubHost" : "www.company.com", "status" : "REGISTERED" }
+
+## Published Host Registration [/pubHostRegistration/{id}]
+A single published host registration entry.
+
++ Parameters
+    + id (required, string, `53fbcd894a00004464030032`) ... String `id` of the pre-warm request to perform action with. Has example value.
+
+### Published Host Registration [GET]
+Invoke this to see details of a given published host registration.
+
++ Request
+    
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
++ Response 200 (application/json)
+
+                { "id" : "53fbcd894a000044640304b0", "pubHost" : "www.company.com", "status" : "REGISTERED", created : 1409078003348 }   
+
+### Un-Register Published Host [DELETE]
+Invoke this when you are no longer using a published host and want it removed from the system.
+
++ Request
+    
+    + Headers
+            
+            Authorization: "Basic dGVycSSkljsdifoLKJwesdNvbTpmb29iYXIx"
+
+
++ Response 204
+        
+# Group Pre-Warm Request
+Endpoints related to the Pre-Warm Request.
+
+## Pre-Warm Request Collection [/preWarmRequests{?pubHost,contentPath}]
+Contains all the Pre-Warm requests.  And ACL behind the scenes ensure that your requests are restricted to being
+viewed by only your registered organization and Exceda technical staff.
+
+A pre-warm request is simply a request to Exceda to place specific assets onto the Exceda CDN for a specified location.
+
+The location is used to help position content in the Exceda CDN.  You may choose to target a region, country or city.  This is a hierarchical datastructure, and
+targetting the top of a hierarchy results in the nodes below it also being targeted.  For example - if you target a country and don't provide a specific city, then all
+cities within that country are targetted.
+
+### List all Pre-Warm Requests [GET]
+Receive a list of all pre-warm requests based on provided query terms.  If none are provided - you are given a list of all requests that match your organization.  Otherwise, you can
+use on the the query terms listed below to help further filter the list down.
+
++ Parameters
+    + pubHost (string,optional) ... A published host name that may belong to a request in the collection
+    + contentPath (string,optional) ... A contentPath that may or may not belong to a request in the collection
+    
++ Request
+
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
++ Response 200 (application/json)
+
+        [{
+          "id": "53fbcd894a000044640304b0", "pubHost": "www.myhost.com", "contentPath" : "/img/some/cool/image.png", "dateTimeMillis" : 1409013682280, "status" : "IN_CACHE"
+        }, {
+          "id": "53fbcd894a00004464030032", "pubHost": "www.myhost.com", "contentPath" : "/img/some/cool/image2.png", "dateTimeMillis" : 1409013682280, "status" : "QUEUED"
+        }]
+
+### Create a Pre-Warm Request [POST]
+This creates a new pre-warm request.  The pre-warm request will then be processed on the time that you have specified.  You will receive a JSON document that indicates
+the id of the newly created request as well as the status.
+
+NOTE - disregard the POST URL parameters - this is a bug with Apiary and they shouldn't be showing here.
+
++ Request (application/json)
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
+    + Body 
+    
+            {
+                "protocol" : "http",
+                "pubHost" : "www.myhost.com",
+                "contentPath" : "/img/some/cool/image.png",
+                "location" : 
+                    {
+                        "region" : "North America",
+                        "country" : "United States",
+                        "city" : "Los Angeles"
+                    },
+                "dateTimeMillis" : 1409013682280
+            }             
+        
+
++ Response 201 (application/json)
+
+        { "id": "53fbcd894a00004464030032", "status": "QUEUED" }
+        
++ Repsonse 403 (application/json)
+
+        { "status" : "forbidden", "details" : "The published host you attempted to pre-warm is not registered or doesn't belong to you." }
+
+## Pre-Warm Request [/preWarmRequests/{id}]
+A single pre-warm request object with all its details
+
++ Parameters
+    + id (required, string, `53fbcd894a00004464030032`) ... String `id` of the pre-warm request to perform action with. Has example value.
+
+### Retrieve a Pre-Warm Request [GET]
++ Request
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
++ Response 200 (application/json)
+
+    + Body
+
+            { "id": "53fbcd894a00004464030032", "protocol" : "http", "pubHost": "www.myhost.com", "contentPath" : "/img/some/cool/image2.png", "dateTimeMillis" : 1409013682280, "status" : "QUEUED"  }
+
+### Remove a Pre-Warm Request [DELETE]
+Removes the Pre-Warm Request from the collection - and the content at the contentPath from the cache
++ Request
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
+
++ Response 204
+
+
+# Group Locations
+Endpoints related to locations.
+
+## Locations Collection [/preWarmRequests/locations]
+The locations collection contains a formal list of all valid locations that can be used with a pre-warm request.
+
+A location consists of a region, country and city.
+
++ Model (application/json)
+    
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
+
+    + Body
+    
+            {
+                "region" : "North America",
+                "countries" : [
+                                {
+                                 name : "United States",
+                                 cities : [ "Dallas", "Los Angeles", "..."]
+                                }
+                               ]
+            }
+                                
+
+### Retrieve a list of locations [GET]
++ Request
+    + Headers
+    
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+
+
++ Response 200 (application/json)
+    [Locations Collection][]
+
+
