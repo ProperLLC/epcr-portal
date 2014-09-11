@@ -173,10 +173,7 @@ NOTE - disregard the POST URL parameters - this is a bug with Apiary and they sh
 
         { "id": "53fbcd894a00004464030032", "status": "QUEUED" }
         
-+ Repsonse 403 (application/json)
-
-        { "status" : "forbidden", "details" : "The published host you attempted to pre-warm is not registered or doesn't belong to you." }
-
+        
 ## Pre-Warm Request [/preWarmRequests/{id}]
 A single pre-warm request object with all its details
 
@@ -223,15 +220,24 @@ A location consists of a region, country and city.
 
     + Body
     
-            {
-                "region" : "North America",
-                "countries" : [
-                                {
-                                 name : "United States",
-                                 cities : [ "Dallas", "Los Angeles", "..."]
-                                }
-                               ]
-            }
+            [
+              {
+                "region": "North America",
+                "regionCode": "NA",
+                "country": "United States",
+                "countryCode": "US",
+                "city": "Chicago",
+                "cityCode": "ORD"
+              },
+              {
+                "region": "North America",
+                "regionCode": "NA",
+                "country": "United States",
+                "countryCode": "US",
+                "city": "Dallas",
+                "cityCode": "DFW"
+              }
+            ]
                                 
 
 ### Retrieve a list of locations [GET]
