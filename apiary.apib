@@ -113,10 +113,10 @@ Invoke this when you are no longer using a published host and want it removed fr
 Endpoints related to the Pre-Warm Request.
 
 ## Pre-Warm Request Collection [/preWarmRequests{?pubHost,contentPath}]
-Contains all the Pre-Warm requests.  And ACL behind the scenes ensure that your requests are restricted to being
+Contains all the Pre-Warm requests.  An ACL behind the scenes ensure that your requests are restricted to being
 viewed by only your registered organization and Exceda technical staff.
 
-A pre-warm request is simply a request to Exceda to place specific assets onto the Exceda CDN for a specified location.
+A pre-warm request is simply a request to Exceda to place specific assets onto the Exceda CDN cache for a specified location.
 
 The location is used to help position content in the Exceda CDN.  You may choose to target a region, country or city.  This is a hierarchical datastructure, and
 targetting the top of a hierarchy results in the nodes below it also being targeted.  For example - if you target a country and don't provide a specific city, then all
@@ -127,8 +127,9 @@ Receive a list of all pre-warm requests based on provided query terms.  If none 
 use on the the query terms listed below to help further filter the list down.
 
 + Parameters
-    + pubHost (string,optional) ... A published host name that may belong to a request in the collection
-    + contentPath (string,optional) ... A contentPath that may or may not belong to a request in the collection
+    + contentPath (string, optional) ... A contentPath that may or may not belong to a request in the collection
+    + pubHost (string, optional) ... A published host name that may belong to a request in the collection
+    
     
 + Request
 
