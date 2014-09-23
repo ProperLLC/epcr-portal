@@ -5,7 +5,7 @@ HOST: http://api.exceda.com
 Exceda Cache PreWarm API enables customers to manage *pre-warm requests* for content in the Exceda CDN cache.
 
 ## Authentication
-This API requires a two step authentication/authorization.  First, HTTP Basic-Auth is used over SSL to retrieve a set of credentials that are valid for 2 weeks.  These credentials include a cryptographic key and other information necessary to sign each request. Each request must provide an Authorization header to be filled out following the [Hawk](https://github.com/hueniverse/hawk) protocol, using the keys provided by the credentials.  Hawk is a security protocol that is an alternative to the OAuth MAC Token specification.  Implementations are available in various languages.
+This API requires a two step authentication/authorization.  First, HTTP Basic-Auth is used over SSL to retrieve a set of credentials that are valid for 2 weeks.  These credentials include a cryptographic key and other information necessary to sign each request. Each request must provide an Authorization header to be filled out following the [Hawk](https://github.com/hueniverse/hawk) protocol, using the information provided by the credentials.  Hawk is a security protocol that is an alternative to the OAuth MAC Token specification.  Implementations are available in various languages.
 
 ## Media Types
 This API uses plain JSON to transmit the data structures back and forth between client and server.
