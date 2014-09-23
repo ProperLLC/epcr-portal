@@ -49,7 +49,7 @@ Invoke this method in order to see what publish hosts are registered for your or
 
     + Headers
     
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
 + Response 200 (application/json)
                 
@@ -68,7 +68,7 @@ a published host that you are trying to, you will also be denied.  (in that case
 
     + Headers
 
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
     + Body
     
@@ -91,7 +91,7 @@ Invoke this to see details of a given published host registration.
     
     + Headers
     
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
 + Response 200 (application/json)
 
@@ -133,7 +133,7 @@ use on the the query terms listed below to help further filter the list down.
     
 + Request
 
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
 + Response 200 (application/json)
 
@@ -152,7 +152,7 @@ NOTE - disregard the POST URL parameters - this is a bug with Apiary and they sh
 + Request (application/json)
     + Headers
     
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
     + Body 
     
@@ -184,7 +184,7 @@ A single pre-warm request object with all its details
 + Request
     + Headers
     
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
 + Response 200 (application/json)
 
@@ -197,7 +197,7 @@ Removes the Pre-Warm Request from the collection - and the content at the conten
 + Request
     + Headers
     
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
 
 + Response 204
@@ -213,12 +213,18 @@ A location consists of a region, country and city.
 
 + Model (application/json)
     
+   
+                                
+
+### Retrieve a list of locations [GET]
++ Request
     + Headers
     
-            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
+            Authorization: "Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=""
 
++ Response 200 (application/json)
 
-    + Body
+     + Body
     
             [
               {
@@ -237,13 +243,7 @@ A location consists of a region, country and city.
                 "city": "Dallas",
                 "cityCode": "DFW"
               }
+              ...
             ]
-                                
-
-### Retrieve a list of locations [GET]
-
-+ Response 200 (application/json)
-
-    [Cache Locations Collection][]
 
 
